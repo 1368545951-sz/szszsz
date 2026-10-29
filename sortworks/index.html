@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#152128">
+  <meta name="description" content="A refined gamified photo-sorting factory prototype.">
+  <title>Sortworks — Photo Sorting Factory</title>
+  <style>
+    :root {
+      --ink:#17242a;
+      --night:#152128;
+      --night-2:#1d2b32;
+      --steel:#34434a;
+      --steel-2:#536168;
+      --cream:#f2efe6;
+      --paper:#fbfaf5;
+      --orange:#ef7550;
+      --orange-dark:#c95638;
+      --mint:#9fceb8;
+      --mint-dark:#397660;
+      --amber:#e6b75f;
+      --blue:#79a9c4;
+      --line:rgba(255,255,255,.12);
+      --soft-line:rgba(23,36,42,.12);
+    }
+    *{box-sizing:border-box}
+    html{background:var(--night)}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--cream);
+      background:
+        radial-gradient(circle at 15% 10%,rgba(115,155,143,.18),transparent 32%),
+        radial-gradient(circle at 90% 75%,rgba(239,117,80,.12),transparent 28%),
+        var(--night);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    button{font:inherit}
+    button,[role="button"]{-webkit-tap-highlight-color:transparent}
+    [hidden]{display:none!important}
+
+    .app{
+      width:min(1500px,100%);
+      min-height:100vh;
+      margin:auto;
+      padding:clamp(12px,2vw,28px);
+      display:grid;
+      grid-template-columns:260px minmax(0,1fr);
+      gap:16px;
+    }
+    .rail{
+      min-height:calc(100vh - clamp(24px,4vw,56px));
+      padding:22px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:24px;
+      background:linear-gradient(180deg,rgba(40,56,63,.95),rgba(27,40,46,.96));
+      box-shadow:0 22px 70px rgba(3,10,13,.25);
+      display:flex;
+      flex-direction:column;
+      gap:22px;
+    }
+    .brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:.03em}
+    .brand-mark{width:40px;height:40px;position:relative;border:2px solid var(--mint);border-radius:11px;transform:rotate(-2deg)}
+    .brand-mark::before{content:"";position:absolute;left:7px;right:7px;top:9px;height:4px;background:var(--orange);box-shadow:0 8px 0 var(--mint),0 16px 0 var(--amber)}
+    .brand small{display:block;margin-top:3px;color:#8fa098;font-size:9px;letter-spacing:.18em;text-transform:uppercase}
+    .batch-label{margin-top:12px;color:var(--mint);font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}
+    .rail h1{margin:8px 0 0;max-width:8ch;font-family:"Arial Narrow",Inter,sans-serif;font-size:44px;line-height:.92;letter-spacing:-.055em;text-transform:uppercase}
+    .rail p{margin:12px 0 0;color:#aeb9b3;font-size:12px;line-height:1.6}
+
+    .manifest{padding:14px;border:1px solid var(--line);border-radius:16px;background:rgba(10,21,25,.18)}
+    .manifest-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:13px;font-size:11px;font-weight:750}
+    .ai-tag{padding:4px 7px;border-radius:999px;color:#cfe7da;background:rgba(159,206,184,.13);font-size:9px}
+    .batch-count{display:flex;align-items:end;gap:8px;margin-bottom:13px}
+    .batch-count strong{font-family:Georgia,serif;font-size:38px;font-weight:500;line-height:.8}
+    .batch-count span{padding-bottom:1px;color:#8fa098;font-size:10px}
+    .manifest-row{display:grid;grid-template-columns:9px 1fr auto;align-items:center;gap:7px;margin-top:8px;color:#aeb9b3;font-size:10px}
+    .manifest-row b{color:var(--cream);font-weight:700}
+    .swatch{width:8px;height:8px;border-radius:2px;background:var(--orange)}
+    .manifest-row:nth-child(2) .swatch{background:var(--amber)}
+    .manifest-row:nth-child(3) .swatch{background:var(--blue)}
+
+    .principles{display:grid;gap:9px}
+    .principle{display:flex;align-items:center;gap:9px;color:#aeb9b3;font-size:10px;line-height:1.4}
+    .principle-icon{width:27px;height:27px;flex:0 0 27px;display:grid;place-items:center;border-radius:8px;background:rgba(255,255,255,.06);color:var(--mint);font-size:12px}
+    .rail-foot{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);color:#83928b;font-size:9px;line-height:1.55}
+
+    .factory-shell{
+      min-width:0;
+      min-height:calc(100vh - clamp(24px,4vw,56px));
+      overflow:hidden;
+      position:relative;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      background:var(--night-2);
+      box-shadow:0 24px 90px rgba(0,0,0,.28);
+    }
+    .topbar{
+      height:64px;
+      position:absolute;
+      z-index:50;
+      inset:0 0 auto;
+      padding:0 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background:rgba(18,30,35,.83);
+      backdrop-filter:blur(12px);
+    }
+    .line-status{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:750;letter-spacing:.03em}
+    .signal{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 5px rgba(159,206,184,.12),0 0 16px rgba(159,206,184,.5)}
+    .top-metrics{display:flex;gap:7px}
+    .metric{padding:7px 10px;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#99a8a1;background:rgba(255,255,255,.035);font-size:9px;text-transform:uppercase;letter-spacing:.08em}
+    .metric strong{color:var(--cream);font-size:11px;letter-spacing:0}
+
+    .factory{
+      --run:0;
+      height:100%;
+      min-height:calc(100vh - clamp(24px,4vw,56px));
+      position:relative;
+      overflow:hidden;
+      padding-top:64px;
+      isolation:isolate;
+      background:
+        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),
+        radial-gradient(circle at 42% 43%,rgba(79,105,98,.22),transparent 34%),
+        #19262c;
+      background-size:32px 32px,32px 32px,auto,auto;
+    }
+    .factory::after{content:"";position:absolute;z-index:1;inset:auto 0 0;height:27%;background:linear-gradient(180deg,#27343a,#1b272c);border-top:2px solid #39484e;box-shadow:inset 0 22px 40px rgba(0,0,0,.2)}
+    .ceiling-pipe{position:absolute;z-index:2;left:4%;right:4%;top:12%;height:18px;border-radius:999px;background:linear-gradient(180deg,#56646a,#303e44 55%,#202d33);box-shadow:0 7px 14px rgba(0,0,0,.25)}
+    .ceiling-pipe::before,.ceiling-pipe::after{content:"";position:absolute;top:-4px;width:12px;height:26px;border-radius:3px;background:#6b777c;box-shadow:inset 0 0 0 2px #445158}
+    .ceiling-pipe::before{left:18%}.ceiling-pipe::after{right:24%}
+    .pipe-down{position:absolute;z-index:2;top:12%;left:9%;width:18px;height:22%;border-radius:0 0 10px 10px;background:linear-gradient(90deg,#2d3a40,#657278,#2b383e)}
+    .pipe-down.right{left:auto;right:9%;height:17%}
+    .lamp{position:absolute;z-index:3;top:13%;width:90px;height:18px;border-radius:50%;background:#88918f;box-shadow:0 14px 35px rgba(241,224,174,.17),0 5px 0 #424f54}
+    .lamp.a{left:24%}.lamp.b{left:54%}
+    .lamp::after{content:"";position:absolute;left:18%;right:18%;top:5px;height:7px;border-radius:50%;background:#f5e4ad;box-shadow:0 5px 16px rgba(245,228,173,.35)}
+
+    .scanner{
+      position:absolute;
+      z-index:10;
+      left:7%;
+      top:31%;
+      width:15%;
+      height:34%;
+      border:14px solid #3d4c52;
+      border-bottom:0;
+      border-radius:18px 18px 0 0;
+      box-shadow:inset 0 0 0 3px #26353b,0 12px 24px rgba(0,0,0,.24);
+    }
+    .scanner::before{content:"AI / VISION";position:absolute;left:50%;top:-31px;transform:translateX(-50%);padding:7px 12px;border-radius:7px;color:var(--mint);background:#26353b;border:1px solid rgba(159,206,184,.24);font-size:8px;font-weight:800;letter-spacing:.16em;white-space:nowrap}
+    .scanner::after{content:"";position:absolute;left:8px;right:8px;top:12%;height:3px;background:var(--orange);box-shadow:0 0 14px var(--orange);animation:scan 2.4s ease-in-out infinite alternate}
+    @keyframes scan{from{transform:translateY(10px)}to{transform:translateY(118px)}}
+
+    .belt{
+      position:absolute;
+      z-index:9;
+      left:3%;
+      right:27%;
+      top:58%;
+      height:88px;
+      border:9px solid #27353b;
+      border-radius:16px;
+      background:repeating-linear-gradient(90deg,#4c5c62 0 42px,#35454b 43px 49px);
+      box-shadow:0 18px 28px rgba(0,0,0,.28),inset 0 9px 12px rgba(255,255,255,.06);
+      animation:belt 2.5s linear infinite;
+    }
+    @keyframes belt{to{background-position:196px 0}}
+    .belt::after{content:"";position:absolute;left:2%;right:2%;bottom:-35px;height:34px;background:repeating-linear-gradient(90deg,transparent 0 45px,#34434a 46px 55px)}
+    .roller{position:absolute;z-index:11;top:60.2%;width:54px;height:54px;border:7px solid #29373d;border-radius:50%;background:radial-gradient(circle,#839096 0 16%,#49585e 17% 48%,#202e34 49%);box-shadow:0 7px 13px rgba(0,0,0,.35)}
+    .roller.a{left:5%}.roller.b{left:38%}.roller.c{right:29%}
+
+    .route-map{position:absolute;z-index:7;left:54%;right:6%;top:29%;bottom:22%}
+    .route{position:absolute;left:0;width:72%;height:8px;border-radius:999px;background:#4b5a60;transform-origin:left center}
+    .route::after{content:"";position:absolute;right:-12px;top:-5px;width:18px;height:18px;border-radius:50%;background:currentColor;box-shadow:0 0 14px currentColor}
+    .route.keep{top:16%;color:var(--mint);transform:rotate(-20deg);background:linear-gradient(90deg,#4b5a60,var(--mint))}
+    .route.later{top:47%;color:var(--amber);transform:rotate(0);background:linear-gradient(90deg,#4b5a60,var(--amber))}
+    .route.remove{top:77%;color:var(--orange);transform:rotate(20deg);background:linear-gradient(90deg,#4b5a60,var(--orange))}
+
+    .dock-stack{position:absolute;z-index:15;right:3.2%;top:23%;width:23%;height:53%;display:grid;grid-template-rows:repeat(3,1fr);gap:12px}
+    .dock{
+      min-height:0;
+      position:relative;
+      padding:13px 13px 12px 54px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:14px;
+      background:linear-gradient(145deg,rgba(54,71,78,.94),rgba(33,47,53,.96));
+      box-shadow:0 12px 24px rgba(0,0,0,.19),inset 0 1px rgba(255,255,255,.07);
+      transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+    }
+    .dock::before{content:"";position:absolute;left:13px;top:50%;width:26px;height:42px;transform:translateY(-50%);border:3px solid currentColor;border-radius:5px;background:repeating-linear-gradient(0deg,transparent 0 7px,currentColor 8px 9px);opacity:.8}
+    .dock.keep{color:var(--mint)}.dock.later{color:var(--amber)}.dock.remove{color:var(--orange)}
+    .dock strong{display:block;color:var(--cream);font-size:11px;letter-spacing:.03em;text-transform:uppercase}
+    .dock span{display:block;margin-top:3px;color:#899991;font-size:9px}
+    .dock-count{position:absolute;right:11px;top:10px;display:grid;place-items:center;width:25px;height:25px;border-radius:7px;color:var(--night);background:currentColor;font-size:10px;font-weight:850}
+    .dock.drop-active{transform:translateX(-7px) scale(1.02);border-color:currentColor;box-shadow:0 0 0 5px color-mix(in srgb,currentColor 18%,transparent),0 18px 34px rgba(0,0,0,.25)}
+    .dock-fill{position:absolute;left:12px;right:12px;bottom:8px;height:3px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden}
+    .dock-fill i{display:block;width:0;height:100%;background:currentColor;transition:width .4s ease}
+
+    .candidate{
+      width:236px;
+      position:absolute;
+      z-index:35;
+      left:35%;
+      top:36%;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.78);
+      border-radius:16px;
+      color:var(--ink);
+      background:var(--paper);
+      box-shadow:0 22px 48px rgba(0,0,0,.36);
+      touch-action:none;
+      user-select:none;
+      transform-origin:center;
+      transition:transform .24s ease,opacity .24s ease;
+    }
+    .candidate.dragging{transition:none;cursor:grabbing;box-shadow:0 30px 65px rgba(0,0,0,.48)}
+    .photo{height:126px;position:relative;overflow:hidden;background:#d7d9d2}
+    .photo.ticket{padding:20px;color:#fff1e7;background:radial-gradient(circle at 85% 18%,#edbd63 0 6px,transparent 7px),linear-gradient(135deg,#263b4d,#a2474f)}
+    .photo.ticket::before{content:"AFTER DARK";display:block;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.4);font-family:Georgia,serif;font-size:20px;letter-spacing:.06em}
+    .photo.ticket::after{content:"LIVE · 21:00 · GATE B";display:block;margin-top:11px;font-size:8px;letter-spacing:.18em}
+    .photo.map{background:#dce1d3}
+    .photo.map::before{content:"";position:absolute;inset:-20px;background:repeating-linear-gradient(28deg,transparent 0 21px,rgba(73,109,97,.25) 22px 27px),repeating-linear-gradient(122deg,transparent 0 30px,rgba(220,139,87,.28) 31px 36px)}
+    .photo.map::after{content:"●";position:absolute;left:54%;top:34%;color:#d65943;font-size:30px;text-shadow:0 4px 10px rgba(80,33,25,.25)}
+    .photo.blur{filter:blur(8px) saturate(.75);transform:scale(1.16);background:radial-gradient(circle at 32% 36%,#d8a36a 0 15%,transparent 16%),radial-gradient(circle at 68% 43%,#4d796b 0 21%,transparent 22%),linear-gradient(135deg,#708d9f,#c8796c)}
+    .photo.selfie{background:linear-gradient(145deg,#7b9d9b,#d49f83)}
+    .photo.selfie::before{content:"☺  ☺";position:absolute;inset:29px 0 auto;text-align:center;color:rgba(255,255,255,.88);font-size:42px;letter-spacing:11px}
+    .photo.recipe{background:radial-gradient(circle at center,#f5ead4 0 27%,#b76d4c 28% 30%,#75906e 31% 34%,#d9c5a3 35%)}
+    .photo.qr{background:#ebe9e1}
+    .photo.qr::before{content:"";position:absolute;width:76px;height:76px;left:50%;top:50%;transform:translate(-50%,-50%);background:conic-gradient(from 90deg,#1e2e34 0 25%,transparent 0 50%,#1e2e34 0 75%,transparent 0);background-size:16px 16px;box-shadow:0 0 0 10px #fff}
+    .photo.boarding{padding:21px;background:linear-gradient(120deg,#e9e4d8 0 65%,#6c8da0 66%);color:#35464d}
+    .photo.boarding::before{content:"BOARDING PASS\A PAR  →  CPH\A 14A · 07:40";white-space:pre;font-family:monospace;font-size:11px;line-height:1.75}
+    .photo.pocket{background:linear-gradient(145deg,#807766,#b6a990)}
+    .photo.pocket::before{content:"";position:absolute;left:31%;top:27%;width:38%;height:42%;border-radius:50%;background:rgba(67,60,51,.24);filter:blur(7px)}
+    .candidate-info{padding:11px 12px 12px}
+    .candidate-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .candidate-top strong{font-size:12px}
+    .class-tag{padding:4px 6px;border-radius:5px;color:var(--orange-dark);background:#f3ded4;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+    .candidate-info p{margin:5px 0 9px;color:#6c7772;font-size:9px;line-height:1.35}
+    .controls{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+    .sort-btn{min-height:34px;border:1px solid var(--soft-line);border-radius:8px;color:var(--ink);background:#f0eee7;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transition:transform .15s ease,background .15s ease}
+    .sort-btn:hover{transform:translateY(-2px);background:#fff}
+    .sort-btn:focus-visible{outline:3px solid rgba(239,117,80,.35);outline-offset:2px}
+    .sort-btn.keep{color:var(--mint-dark)}.sort-btn.later{color:#9a6b15}.sort-btn.remove{color:var(--orange-dark)}
+    .drag-hint{margin-top:7px;color:#929995;font-size:8px;text-align:center}
+
+    .batch-progress{position:absolute;z-index:20;left:5%;right:29%;bottom:8%;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;color:#94a39c;font-size:9px;font-weight:750;text-transform:uppercase;letter-spacing:.08em}
+    .progress-track{height:8px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden}
+    .progress-track span{display:block;width:0;height:100%;background:repeating-linear-gradient(90deg,var(--orange) 0 24px,#f49a6f 25px 28px);box-shadow:0 0 14px rgba(239,117,80,.35);transition:width .45s ease}
+    .batch-progress b{color:var(--cream);font-size:10px}
+    .decision-note{position:absolute;z-index:20;right:3.2%;bottom:8%;width:23%;color:#7f8f88;font-size:8px;line-height:1.45;text-align:center}
+
+    .toast{position:absolute;z-index:80;left:50%;top:82px;transform:translate(-50%,-10px);padding:9px 13px;border:1px solid rgba(255,255,255,.12);border-radius:8px;color:var(--cream);background:rgba(18,31,36,.9);box-shadow:0 12px 25px rgba(0,0,0,.25);font-size:10px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    .score-pop{position:absolute;z-index:85;right:31%;top:23%;color:var(--amber);font-family:Georgia,serif;font-size:28px;font-weight:700;text-shadow:0 6px 16px rgba(0,0,0,.5);opacity:0;pointer-events:none}
+    .score-pop.show{animation:score .75s ease-out}
+    @keyframes score{0%{opacity:0;transform:translateY(14px) scale(.8)}30%{opacity:1}100%{opacity:0;transform:translateY(-20px) scale(1.12)}}
+
+    .overlay{position:absolute;z-index:100;inset:0;display:grid;place-items:center;padding:22px;background:rgba(8,18,22,.68);backdrop-filter:blur(9px)}
+    .start-card,.finish-card{width:min(470px,100%);padding:28px;border:1px solid rgba(255,255,255,.18);border-radius:20px;color:var(--cream);background:linear-gradient(145deg,rgba(41,58,65,.98),rgba(25,39,45,.98));box-shadow:0 30px 90px rgba(0,0,0,.4)}
+    .start-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:25px;color:#93a49c;font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}
+    .start-light{display:flex;align-items:center;gap:7px;color:var(--mint)}
+    .start-light::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 12px var(--mint)}
+    .overlay h2{margin:0;font-family:"Arial Narrow",Inter,sans-serif;font-size:38px;line-height:.98;letter-spacing:-.045em;text-transform:uppercase}
+    .overlay p{margin:13px 0 20px;color:#aab6b0;font-size:12px;line-height:1.6}
+    .start-specs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+    .spec{padding:10px;border:1px solid rgba(255,255,255,.09);border-radius:9px;background:rgba(255,255,255,.035);text-align:center}
+    .spec strong{display:block;color:var(--cream);font-size:12px}.spec span{color:#7f9188;font-size:8px}
+    .primary{width:100%;min-height:49px;border:0;border-radius:10px;color:#18242a;background:var(--orange);box-shadow:0 11px 25px rgba(239,117,80,.2);font-weight:850;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:transform .15s ease,background .15s ease}
+    .primary:hover{transform:translateY(-2px);background:#f58c68}.primary:focus-visible{outline:3px solid rgba(255,255,255,.6);outline-offset:3px}
+    .micro{margin-top:11px;color:#73867d;font-size:8px;text-align:center}
+    .finish-card{text-align:center}
+    .batch-stamp{width:76px;height:76px;margin:0 auto 16px;display:grid;place-items:center;border:3px double var(--mint);border-radius:50%;color:var(--mint);font-size:28px;transform:rotate(-6deg)}
+    .finish-card h2{font-size:34px}
+    .finish-card p{max-width:40ch;margin-left:auto;margin-right:auto}
+    .results{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:19px 0}
+    .result{padding:12px 7px;border:1px solid rgba(255,255,255,.08);border-radius:9px;background:rgba(255,255,255,.035)}
+    .result strong{display:block;color:var(--cream);font-family:Georgia,serif;font-size:23px;font-weight:500}.result span{color:#82938b;font-size:8px;text-transform:uppercase;letter-spacing:.08em}
+    .unlock{margin-bottom:16px;padding:11px;border:1px solid rgba(230,183,95,.25);border-radius:9px;color:#f0ca7f;background:rgba(230,183,95,.08);font-size:10px;font-weight:750}
+
+    @media(max-width:1050px){
+      .app{grid-template-columns:1fr}.rail{min-height:auto;display:grid;grid-template-columns:1.3fr 1fr;gap:17px}.rail .brand{grid-column:1/-1}.principles,.rail-foot{display:none}.factory-shell,.factory{min-height:720px}.rail h1{max-width:none;font-size:38px}
+    }
+    @media(max-width:700px){
+      .app{padding:0}.rail{display:none}.factory-shell{min-height:100svh;border:0;border-radius:0}.factory{min-height:100svh}.topbar{height:58px;padding:0 12px}.metric{padding:6px}.metric:first-child{display:none}.ceiling-pipe{top:10%}.pipe-down,.lamp{display:none}.scanner{left:4%;top:29%;width:23%;height:28%}.belt{left:0;right:0;top:50%;height:72px}.roller{top:51.5%}.roller.a{left:4%}.roller.b{left:45%}.roller.c{right:5%}.route-map{display:none}.dock-stack{right:3%;left:3%;top:auto;bottom:19%;width:auto;height:88px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr;gap:7px}.dock{padding:12px 6px 7px;text-align:center}.dock::before{display:none}.dock span{display:none}.dock-count{right:7px;top:6px;width:20px;height:20px}.dock-fill{bottom:6px}.candidate{width:calc(100% - 28px);left:14px;top:18%;display:grid;grid-template-columns:38% 62%}.photo{height:auto;min-height:154px}.candidate-info{padding:10px}.candidate-top{align-items:flex-start}.batch-progress{left:14px;right:14px;bottom:13%;}.decision-note{display:none}.score-pop{right:16px;top:11%}.controls{gap:4px}.sort-btn{font-size:7px}.overlay{padding:14px}.start-card,.finish-card{padding:23px}.overlay h2{font-size:32px}
+    }
+    @media(max-width:390px){.candidate{grid-template-columns:34% 66%}.candidate-info p{margin:4px 0 7px}.drag-hint{display:none}.dock strong{font-size:8px}.start-specs{gap:5px}.spec{padding:8px 3px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <aside class="rail">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>SORT/WORKS<small>Image processing line</small></span></div>
+      <section>
+        <div class="batch-label">Batch 24—10</div>
+        <h1>Clear the backlog.</h1>
+        <p>AI prepares the candidates. You route every image to the right destination and keep the line moving.</p>
+      </section>
+      <section class="manifest" aria-label="Batch manifest">
+        <div class="manifest-head"><span>Input manifest</span><span class="ai-tag">AI scanned</span></div>
+        <div class="batch-count"><strong>8</strong><span>images waiting</span></div>
+        <div class="manifest-row"><span class="swatch"></span><span>Temporary</span><b>3</b></div>
+        <div class="manifest-row"><span class="swatch"></span><span>Single use</span><b>3</b></div>
+        <div class="manifest-row"><span class="swatch"></span><span>No clear value</span><b>2</b></div>
+      </section>
+      <div class="principles">
+        <div class="principle"><span class="principle-icon">◎</span><span>No timer and no penalty</span></div>
+        <div class="principle"><span class="principle-icon">↺</span><span>Recycle only after confirmation</span></div>
+        <div class="principle"><span class="principle-icon">◇</span><span>AI suggests, the user decides</span></div>
+      </div>
+      <div class="rail-foot">Prototype mode · Simulated AI results<br>Designed to test the sorting experience, not recognition accuracy.</div>
+    </aside>
+
+    <section class="factory-shell" aria-label="Interactive photo sorting factory">
+      <header class="topbar">
+        <div class="line-status"><span class="signal"></span><span data-line-status>Line 03 · ready</span></div>
+        <div class="top-metrics"><span class="metric">Flow score&nbsp; <strong data-score>000</strong></span><span class="metric">Streak&nbsp; <strong data-streak>0</strong></span><span class="metric"><strong data-sorted>0</strong> / 8 sorted</span></div>
+      </header>
+
+      <div class="factory" data-factory>
+        <div class="ceiling-pipe"></div><div class="pipe-down"></div><div class="pipe-down right"></div><div class="lamp a"></div><div class="lamp b"></div>
+        <div class="scanner"></div>
+        <div class="belt"></div><div class="roller a"></div><div class="roller b"></div><div class="roller c"></div>
+        <div class="route-map" aria-hidden="true"><span class="route keep"></span><span class="route later"></span><span class="route remove"></span></div>
+
+        <div class="dock-stack" aria-label="Sorting destinations">
+          <div class="dock keep" data-drop="keep"><span class="dock-count" data-count-keep>0</span><strong>Archive vault</strong><span>Keep and protect</span><div class="dock-fill"><i data-fill-keep></i></div></div>
+          <div class="dock later" data-drop="later"><span class="dock-count" data-count-later>0</span><strong>Hold queue</strong><span>Review another day</span><div class="dock-fill"><i data-fill-later></i></div></div>
+          <div class="dock remove" data-drop="remove"><span class="dock-count" data-count-remove>0</span><strong>Recycle loop</strong><span>Ready to clear</span><div class="dock-fill"><i data-fill-remove></i></div></div>
+        </div>
+
+        <article class="candidate" data-candidate hidden aria-live="polite">
+          <div class="photo ticket" data-photo></div>
+          <div class="candidate-info">
+            <div class="candidate-top"><strong data-name>Concert ticket</strong><span class="class-tag" data-class>92% temporary</span></div>
+            <p data-reason>Event ended eight months ago · 4.2 MB</p>
+            <div class="controls" aria-label="Sorting choices">
+              <button class="sort-btn keep" type="button" data-action="keep">Archive</button>
+              <button class="sort-btn later" type="button" data-action="later">Hold</button>
+              <button class="sort-btn remove" type="button" data-action="remove">Recycle</button>
+            </div>
+            <div class="drag-hint">Drag to a dock, or tap a route.</div>
+          </div>
+        </article>
+
+        <div class="batch-progress" data-progress-wrap hidden>
+          <span>Batch progress</span><div class="progress-track" role="progressbar" aria-label="Batch progress" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0"><span data-progress></span></div><b data-percent>0%</b>
+        </div>
+        <div class="decision-note">All recycled items remain recoverable until final confirmation.</div>
+        <div class="toast" role="status" aria-live="polite" data-toast></div>
+        <div class="score-pop" aria-hidden="true" data-score-pop>+120</div>
+
+        <div class="overlay" data-start-overlay>
+          <section class="start-card">
+            <div class="start-header"><span>Sortworks / line 03</span><span class="start-light">System ready</span></div>
+            <h2>Start batch 24—10.</h2>
+            <p>Route eight AI-suggested images through the factory. There is no timer and no wrong choice—only a clearer photo library.</p>
+            <div class="start-specs"><div class="spec"><strong>8</strong><span>candidates</span></div><div class="spec"><strong>3</strong><span>destinations</span></div><div class="spec"><strong>~60s</strong><span>test time</span></div></div>
+            <button class="primary" type="button" data-start>Activate sorting line</button>
+            <div class="micro">AI recognition is simulated for this interaction test.</div>
+          </section>
+        </div>
+
+        <div class="overlay" data-finish hidden>
+          <section class="finish-card">
+            <div class="batch-stamp" aria-hidden="true">✓</div>
+            <h2>Batch complete.</h2>
+            <p>The backlog has been routed. Valuable images are protected, uncertain items are contained, and removable content is ready for confirmation.</p>
+            <div class="results"><div class="result"><strong data-final-keep>0</strong><span>archived</span></div><div class="result"><strong data-final-later>0</strong><span>on hold</span></div><div class="result"><strong data-final-remove>0</strong><span>recycled</span></div></div>
+            <div class="unlock" data-unlock>Zero Backlog badge · 0 flow score</div>
+            <button class="primary" type="button" data-restart>Run the batch again</button>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (()=>{
+      const items=[
+        {name:'Concert ticket',tag:'92% temporary',reason:'Event ended eight months ago · 4.2 MB',photo:'ticket',mb:4.2},
+        {name:'Map screenshot',tag:'89% single use',reason:'Trip finished five months ago · 3.8 MB',photo:'map',mb:3.8},
+        {name:'Blurry photo',tag:'97% low value',reason:'Very low clarity · 5.1 MB',photo:'blur',mb:5.1},
+        {name:'Similar selfie',tag:'84% duplicate',reason:'One of nine near-duplicates · 4.7 MB',photo:'selfie',mb:4.7},
+        {name:'Recipe screenshot',tag:'71% single use',reason:'Saved eleven months ago · 2.9 MB',photo:'recipe',mb:2.9},
+        {name:'Used QR code',tag:'95% temporary',reason:'Payment completed · 1.6 MB',photo:'qr',mb:1.6},
+        {name:'Boarding pass',tag:'91% temporary',reason:'Flight completed last year · 3.2 MB',photo:'boarding',mb:3.2},
+        {name:'Pocket photo',tag:'88% low value',reason:'Accidental camera capture · 4.4 MB',photo:'pocket',mb:4.4}
+      ];
+      const candidate=document.querySelector('[data-candidate]');
+      const drops=[...document.querySelectorAll('[data-drop]')];
+      const finish=document.querySelector('[data-finish]');
+      const startOverlay=document.querySelector('[data-start-overlay]');
+      const progressWrap=document.querySelector('[data-progress-wrap]');
+      const progress=document.querySelector('.progress-track');
+      let index=0,score=0,streak=0,recycledMb=0,busy=false,pointer=null;
+      let counts={keep:0,later:0,remove:0};
+
+      function render(){
+        const item=items[index];
+        document.querySelector('[data-name]').textContent=item.name;
+        document.querySelector('[data-class]').textContent=item.tag;
+        document.querySelector('[data-reason]').textContent=item.reason;
+        document.querySelector('[data-photo]').className='photo '+item.photo;
+        candidate.style.opacity='1';
+        candidate.style.transform='';
+        busy=false;
+      }
+      function update(){
+        const pct=Math.round(index/items.length*100);
+        document.querySelector('[data-progress]').style.width=pct+'%';
+        document.querySelector('[data-percent]').textContent=pct+'%';
+        progress.setAttribute('aria-valuenow',String(index));
+        document.querySelector('[data-sorted]').textContent=index;
+        document.querySelector('[data-score]').textContent=String(score).padStart(3,'0');
+        document.querySelector('[data-streak]').textContent=streak;
+        ['keep','later','remove'].forEach(key=>{
+          document.querySelector(`[data-count-${key}]`).textContent=counts[key];
+          document.querySelector(`[data-fill-${key}]`).style.width=Math.min(100,counts[key]/4*100)+'%';
+        });
+        const status=['ready','scanning','sorting','flowing','stable','efficient','near complete','final item','batch complete'];
+        document.querySelector('[data-line-status]').textContent='Line 03 · '+status[index];
+      }
+      function toast(text){
+        const el=document.querySelector('[data-toast]');el.textContent=text;el.classList.add('show');
+        setTimeout(()=>el.classList.remove('show'),1050);
+      }
+      function pop(value){
+        const el=document.querySelector('[data-score-pop]');el.textContent='+'+value;el.classList.remove('show');void el.offsetWidth;el.classList.add('show');
+      }
+      function clearDrag(){candidate.classList.remove('dragging');drops.forEach(d=>d.classList.remove('drop-active'));pointer=null}
+      function finishBatch(){
+        candidate.hidden=true;progressWrap.hidden=true;
+        document.querySelector('[data-final-keep]').textContent=counts.keep;
+        document.querySelector('[data-final-later]').textContent=counts.later;
+        document.querySelector('[data-final-remove]').textContent=counts.remove;
+        document.querySelector('[data-unlock]').textContent=`Zero Backlog badge · ${score} flow score · ${recycledMb.toFixed(1)} MB ready`;
+        setTimeout(()=>finish.hidden=false,420);
+      }
+      function choose(action){
+        if(busy||index>=items.length)return;busy=true;
+        const item=items[index];counts[action]++;streak++;
+        if(action==='remove')recycledMb+=item.mb;
+        const base={keep:110,later:90,remove:130}[action];
+        const value=base+Math.min(streak,8)*5;score+=value;
+        const msg={keep:'Routed to Archive Vault.',later:'Placed safely in the Hold Queue.',remove:'Sent to the recoverable Recycle Loop.'}[action];
+        toast(msg);pop(value);
+        const exit={keep:'translate(430px,-150px) rotate(-8deg) scale(.45)',later:'translate(460px,8px) scale(.44)',remove:'translate(430px,170px) rotate(8deg) scale(.42)'}[action];
+        candidate.style.transform=exit;candidate.style.opacity='0';
+        index++;update();
+        setTimeout(()=>{if(index>=items.length)finishBatch();else render()},470);
+      }
+      function reset(){
+        index=0;score=0;streak=0;recycledMb=0;busy=false;counts={keep:0,later:0,remove:0};
+        finish.hidden=true;candidate.hidden=false;progressWrap.hidden=false;update();render();
+      }
+      document.querySelector('[data-start]').addEventListener('click',()=>{startOverlay.hidden=true;reset()});
+      document.querySelector('[data-restart]').addEventListener('click',reset);
+      document.querySelectorAll('[data-action]').forEach(btn=>btn.addEventListener('click',()=>choose(btn.dataset.action)));
+      candidate.addEventListener('pointerdown',event=>{
+        if(busy||event.target.closest('button'))return;pointer={id:event.pointerId,x:event.clientX,y:event.clientY};candidate.setPointerCapture(event.pointerId);candidate.classList.add('dragging');
+      });
+      candidate.addEventListener('pointermove',event=>{
+        if(!pointer||event.pointerId!==pointer.id)return;
+        const dx=event.clientX-pointer.x,dy=event.clientY-pointer.y;candidate.style.transform=`translate(${dx}px,${dy}px) rotate(${dx/36}deg)`;
+        drops.forEach(d=>{const r=d.getBoundingClientRect();d.classList.toggle('drop-active',event.clientX>=r.left&&event.clientX<=r.right&&event.clientY>=r.top&&event.clientY<=r.bottom)});
+      });
+      candidate.addEventListener('pointerup',event=>{
+        if(!pointer||event.pointerId!==pointer.id)return;
+        const target=drops.find(d=>{const r=d.getBoundingClientRect();return event.clientX>=r.left&&event.clientX<=r.right&&event.clientY>=r.top&&event.clientY<=r.bottom});
+        clearDrag();candidate.style.transform='';if(target)choose(target.dataset.drop);
+      });
+      candidate.addEventListener('pointercancel',()=>{clearDrag();candidate.style.transform=''});
+    })();
+  </script>
+</body>
+</html>
