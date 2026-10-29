@@ -68,13 +68,14 @@
 
     .main{position:relative;z-index:5;min-height:calc(100vh - 140px);display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:20px;align-items:center}
     .stage{min-width:0;position:relative;min-height:690px;display:grid;place-items:center}
-    .stage-label{position:absolute;left:3%;top:7%;z-index:10}
-    .stage-label span{display:block;color:#5c8795;font-size:10px;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.stage-label strong{display:block;margin-top:2px;font-size:44px;line-height:1;letter-spacing:-.045em}.stage-label em{display:block;margin-top:5px;color:#67919d;font-size:11px;font-style:normal}
+    .stage-label{position:absolute;left:2%;top:4%;z-index:20;width:230px;padding:13px 15px;border:2px solid rgba(255,255,255,.78);border-radius:17px;background:rgba(255,255,255,.78);box-shadow:0 9px 22px rgba(50,111,131,.1);backdrop-filter:blur(8px)}
+    .stage-label span{display:block;color:#5c8795;font-size:9px;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.stage-label strong{display:block;margin-top:3px;font-size:24px;line-height:1.05;letter-spacing:-.035em}.stage-label em{display:block;margin-top:5px;color:#67919d;font-size:10px;font-style:normal;line-height:1.35}
+    .today-stats{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}.today-stats b{padding:5px 7px;border-radius:999px;color:#477481;background:#fff;font-size:8px;line-height:1;box-shadow:0 3px 8px rgba(50,111,131,.08)}.today-stats b:first-child{color:#d56b32;background:#fff1dc}
     .island-wrap{width:min(100%,930px);position:relative;filter:drop-shadow(0 30px 27px rgba(45,104,87,.18));transform:translateY(28px)}
     .island-wrap svg{width:100%;height:auto;display:block;overflow:visible}
-    .junk{transition:opacity .4s ease,transform .4s ease;transform-origin:center}.junk.cleared{opacity:0;transform:translateY(18px) scale(.45)}
-    .restore{opacity:0;transform:translateY(18px) scale(.55);transform-origin:center;transition:opacity .5s ease,transform .5s cubic-bezier(.2,.9,.3,1.3)}.restore.grown{opacity:1;transform:translateY(0) scale(1)}
-    .keep-photo{opacity:0;transform:scale(.6);transform-origin:center;transition:opacity .4s ease,transform .4s ease}.keep-photo.show{opacity:1;transform:scale(1)}
+    .junk{transition:opacity .4s ease}.junk.cleared{opacity:0}
+    .restore{opacity:0;transition:opacity .5s ease}.restore.grown{opacity:1}
+    .keep-photo{opacity:0;transition:opacity .4s ease}.keep-photo.show{opacity:1}
     .island-shine{opacity:0;transition:opacity .6s ease}.island-shine.show{opacity:.35}
 
     .dock-label{position:absolute;z-index:18;padding:8px 11px;border:2px solid rgba(255,255,255,.8);border-radius:999px;color:#446d79;background:rgba(255,255,255,.92);box-shadow:0 9px 18px rgba(42,102,120,.15);font-size:10px;font-weight:900;white-space:nowrap;transition:transform .2s ease,box-shadow .2s ease}
@@ -113,11 +114,11 @@
     .finish-card{width:min(520px,100%)}.finish-stars{margin-bottom:9px;color:var(--orange);font-size:35px;letter-spacing:8px;text-shadow:0 4px 0 #fff}.finish-island{height:130px;position:relative;margin:10px 0 18px;display:grid;place-items:center}.finish-island::before{content:"";width:210px;height:115px;border-radius:20px;background:linear-gradient(145deg,#b4e94c,#6fc33c);transform:rotate(28deg) skewY(-12deg);box-shadow:10px 13px 0 #7f963d,17px 20px 0 rgba(53,96,70,.11)}.finish-island::after{content:"🌳  🌼  🌳";position:absolute;font-size:37px;letter-spacing:12px;filter:drop-shadow(0 6px 3px rgba(62,106,55,.17))}
     .finish-results{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}.finish-result{padding:11px;border-radius:14px;background:#edf8f2}.finish-result strong{display:block;font-size:20px}.finish-result span{color:#708e89;font-size:8px;text-transform:uppercase;font-weight:850}.badge{margin-bottom:17px;padding:11px;border-radius:13px;color:#a26018;background:#fff2c7;font-size:10px;font-weight:900}
 
-    @media(max-width:1050px){.main{grid-template-columns:minmax(0,1fr) 290px}.stage{min-height:620px}.stage-label strong{font-size:36px}.island-wrap{transform:translate(-3%,30px) scale(.92)}}
+    @media(max-width:1050px){.main{grid-template-columns:minmax(0,1fr) 290px}.stage{min-height:620px}.stage-label strong{font-size:22px}.island-wrap{transform:translate(-3%,38px) scale(.92)}}
     @media(max-width:780px){
-      .app{padding:14px 12px 18px}.brand small{display:none}.pill{min-height:38px;padding:0 10px}.pill:nth-child(2){display:none}.levelbar{margin-top:12px}.level-title{min-width:112px}.stars{width:calc(100% - 127px)}.main{grid-template-columns:1fr;align-items:start}.stage{min-height:500px}.stage-label{top:5%;left:2%}.stage-label strong{font-size:30px}.stage-label em{display:none}.island-wrap{width:110%;transform:translate(-5%,35px)}.dock-label.keep{right:3%;top:22%}.dock-label.later{right:2%;bottom:18%}.dock-label.remove{left:2%;bottom:20%}.side{padding:0;gap:10px}.candidate{display:grid;grid-template-columns:42% 58%;border-radius:20px}.photo-wrap{height:auto;min-height:210px}.candidate-info{padding:12px}.candidate-head{flex-direction:column;gap:5px}.candidate-info p{min-height:0;margin:5px 0 9px}.tip{display:none}.summary{margin-bottom:8px}.toast{top:10%}
+      .app{padding:14px 12px 18px}.brand small{display:none}.pill{min-height:38px;padding:0 10px}.pill:nth-child(2){display:none}.levelbar{margin-top:12px}.level-title{min-width:112px}.stars{width:calc(100% - 127px)}.main{grid-template-columns:1fr;align-items:start}.stage{min-height:520px}.stage-label{top:1%;left:2%;width:205px;padding:10px 12px}.stage-label strong{font-size:19px}.stage-label em{display:none}.today-stats{margin-top:7px}.island-wrap{width:110%;transform:translate(-5%,74px)}.dock-label.keep{right:3%;top:24%}.dock-label.later{right:2%;bottom:15%}.dock-label.remove{left:2%;bottom:17%}.side{padding:0;gap:10px}.candidate{display:grid;grid-template-columns:42% 58%;border-radius:20px}.photo-wrap{height:auto;min-height:210px}.candidate-info{padding:12px}.candidate-head{flex-direction:column;gap:5px}.candidate-info p{min-height:0;margin:5px 0 9px}.tip{display:none}.summary{margin-bottom:8px}.toast{top:10%}
     }
-    @media(max-width:480px){.topbar{align-items:flex-start}.brand{font-size:15px}.brand-mark{width:38px;height:38px}.hud{gap:5px}.pill{padding:0 8px}.pill:nth-child(3){display:none}.level-title strong{font-size:12px}.star{width:27px;height:27px}.stage{min-height:420px}.stage-label strong{font-size:25px}.island-wrap{width:125%;transform:translate(-10%,50px)}.dock-label{padding:6px 8px;font-size:8px}.candidate{grid-template-columns:38% 62%}.photo-wrap{min-height:198px}.actions{gap:4px}.action{min-height:39px;font-size:8px}.drag-note{display:none}.overlay{padding:12px}.start-card,.finish-card{padding:22px 17px}.overlay h2{font-size:27px}.start-features{gap:5px}.feature{padding:9px 3px}}
+    @media(max-width:480px){.topbar{align-items:flex-start}.brand{font-size:15px}.brand-mark{width:38px;height:38px}.hud{gap:5px}.pill{padding:0 8px}.pill:nth-child(3){display:none}.level-title strong{font-size:12px}.star{width:27px;height:27px}.stage{min-height:445px}.stage-label{width:180px}.stage-label strong{font-size:17px}.island-wrap{width:125%;transform:translate(-10%,82px)}.dock-label{padding:6px 8px;font-size:8px}.candidate{grid-template-columns:38% 62%}.photo-wrap{min-height:198px}.actions{gap:4px}.action{min-height:39px;font-size:8px}.drag-note{display:none}.overlay{padding:12px}.start-card,.finish-card{padding:22px 17px}.overlay h2{font-size:27px}.start-features{gap:5px}.feature{padding:9px 3px}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
   </style>
 </head>
@@ -129,18 +130,18 @@
       <div class="hud">
         <div class="pill"><span class="pill-icon">★</span><strong data-score>0</strong><span>points</span></div>
         <div class="pill"><span class="pill-icon">♧</span><strong data-leaves>0</strong><span>leaves</span></div>
-        <div class="pill"><span class="pill-icon">▣</span><strong data-count>0</strong><span>/ 6</span></div>
+        <div class="pill"><span class="pill-icon">▣</span><strong data-count>0</strong><span>/ 12</span></div>
       </div>
     </header>
 
     <div class="levelbar">
-      <div class="level-title"><span>Restoration level</span><strong data-level>Cluttered island</strong></div>
+      <div class="level-title"><span>Today’s progress</span><strong data-level>12 pieces waiting</strong></div>
       <div class="stars" aria-label="Restoration progress"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
     </div>
 
     <section class="main" aria-label="Interactive photo island restoration game">
       <div class="stage">
-        <div class="stage-label"><span>Today’s clean-up</span><strong>Restore<br>the island.</strong><em>AI found 6 images to review.</em></div>
+        <div class="stage-label"><span>Today’s digital litter</span><strong>12 new pieces.</strong><em>A two-minute clean-up for your after-work break.</em><div class="today-stats"><b>🔥 5-day streak</b><b>≈ 2 min</b></div></div>
         <div class="island-wrap">
           <svg viewBox="0 0 900 610" role="img" aria-label="An isometric digital landfill that becomes a bright park">
             <defs>
@@ -225,9 +226,9 @@
         <section class="start-card">
           <div class="mini-island" aria-hidden="true"></div>
           <h2>Your photo island needs a little care.</h2>
-          <p>Review six real photos and screenshots. Every choice clears a patch of clutter and helps the island grow.</p>
-          <div class="start-features"><div class="feature"><strong>6</strong><span>real images</span></div><div class="feature"><strong>3</strong><span>choices</span></div><div class="feature"><strong>~45s</strong><span>play time</span></div></div>
-          <button class="primary" type="button" data-start>Start restoring</button>
+          <p>AI grouped 12 low-value photos and screenshots created today. Use a short break to decide what stays.</p>
+          <div class="start-features"><div class="feature"><strong>12</strong><span>today’s items</span></div><div class="feature"><strong>3</strong><span>choices</span></div><div class="feature"><strong>~2 min</strong><span>daily round</span></div></div>
+          <button class="primary" type="button" data-start>Clean today’s litter</button>
           <div class="micro">No photo is deleted automatically · Recycle remains recoverable</div>
         </section>
       </div>
@@ -235,12 +236,12 @@
       <div class="overlay" data-finish hidden>
         <section class="finish-card">
           <div class="finish-stars">★ ★ ★</div>
-          <h2>Island restored!</h2>
-          <p>You cleared the visual clutter and made room for the images that still matter.</p>
+          <h2>Today’s island is clear!</h2>
+          <p>You finished today’s two-minute round. Come back tomorrow to keep your clean-up streak growing.</p>
           <div class="finish-island" aria-hidden="true"></div>
           <div class="finish-results"><div class="finish-result"><strong data-final-keep>0</strong><span>kept</span></div><div class="finish-result"><strong data-final-later>0</strong><span>review later</span></div><div class="finish-result"><strong data-final-remove>0</strong><span>recycled</span></div></div>
           <div class="badge" data-badge>Bright Island badge · 0 points</div>
-          <button class="primary" type="button" data-restart>Play again</button>
+          <button class="primary" type="button" data-restart>Replay today’s round</button>
         </section>
       </div>
     </section>
@@ -249,13 +250,20 @@
   <script>
     (()=>{
       const images=[
-        {name:'Concert ticket screenshot',ai:'92% temporary',reason:'The event ended ten months ago · 4.2 MB',type:'Screenshot',src:'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:4.2},
-        {name:'Navigation screenshot',ai:'89% single use',reason:'The trip finished five months ago · 3.8 MB',type:'Screenshot',src:'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:3.8},
-        {name:'Accidental blurry photo',ai:'97% low value',reason:'The image is heavily blurred · 5.1 MB',type:'Photo',src:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=78',kind:'blurry',mb:5.1},
-        {name:'Similar selfie',ai:'84% near duplicate',reason:'One of eight visually similar photos · 4.7 MB',type:'Photo',src:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:4.7},
-        {name:'Payment receipt photo',ai:'86% temporary',reason:'The return period ended last year · 2.9 MB',type:'Photo',src:'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:2.9},
-        {name:'Design reference screenshot',ai:'63% uncertain',reason:'Saved for inspiration — you may still need it · 3.3 MB',type:'Screenshot',src:'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:3.3}
+        {name:'Concert ticket screenshot',ai:'94% single use',reason:'The QR ticket was used this afternoon · 4.2 MB',type:'Screenshot',src:'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:4.2},
+        {name:'Parking spot photo',ai:'91% temporary',reason:'Taken to find the car after work · 4.6 MB',type:'Temporary photo',src:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:4.6},
+        {name:'Accidental blurry landscape',ai:'97% low value',reason:'The camera moved while this was taken · 5.1 MB',type:'Blurry photo',src:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=78',kind:'blurry',mb:5.1},
+        {name:'Navigation screenshot',ai:'90% single use',reason:'The route ended three hours ago · 3.8 MB',type:'Screenshot',src:'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:3.8},
+        {name:'Payment receipt photo',ai:'87% temporary',reason:'Saved until today’s refund was confirmed · 2.9 MB',type:'Temporary photo',src:'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:2.9},
+        {name:'Recipe screenshot',ai:'78% single use',reason:'The meal was cooked this evening · 3.1 MB',type:'Screenshot',src:'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:3.1},
+        {name:'Similar selfie',ai:'84% near duplicate',reason:'One of eight similar photos taken today · 4.7 MB',type:'Near duplicate',src:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:4.7},
+        {name:'Boarding gate photo',ai:'89% temporary',reason:'The gate information is no longer needed · 4.0 MB',type:'Temporary photo',src:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:4.0},
+        {name:'Product comparison screenshot',ai:'76% single use',reason:'Saved before today’s purchase · 3.5 MB',type:'Screenshot',src:'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:3.5},
+        {name:'Wi-Fi detail photo',ai:'85% temporary',reason:'The network was used for a short visit · 3.0 MB',type:'Temporary photo',src:'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:3.0},
+        {name:'Accidental blurry night photo',ai:'96% low value',reason:'Too blurred to show the intended scene · 5.4 MB',type:'Blurry photo',src:'https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=82',kind:'blurry',mb:5.4},
+        {name:'Design reference image',ai:'61% uncertain',reason:'Saved for inspiration — it may still be useful · 3.3 MB',type:'Reference',src:'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=82',kind:'normal',mb:3.3}
       ];
+      images.forEach(({src})=>{const image=new Image();image.src=src});
       const candidate=document.querySelector('[data-candidate]');
       const photo=document.querySelector('[data-photo]');
       const wrap=document.querySelector('[data-photo-wrap]');
@@ -285,12 +293,11 @@
         document.querySelector('[data-keep]').textContent=counts.keep;
         document.querySelector('[data-later]').textContent=counts.later;
         document.querySelector('[data-remove]').textContent=counts.remove;
-        junk.forEach((el,i)=>el.classList.toggle('cleared',i<index));
-        restore.forEach((el,i)=>el.classList.toggle('grown',i<index));
+        junk.forEach((el,i)=>el.classList.toggle('cleared',index>=(i+1)*2));
+        restore.forEach((el,i)=>el.classList.toggle('grown',index>=(i+1)*2));
         stars.forEach((el,i)=>el.classList.toggle('on',index>=Math.ceil((i+1)*images.length/4)));
-        document.querySelector('[data-shine]').classList.toggle('show',index>=4);
-        const levels=['Cluttered island','First patch clear','New growth','Half restored','Brightening up','Almost finished','Island restored'];
-        document.querySelector('[data-level]').textContent=levels[index];
+        document.querySelector('[data-shine]').classList.toggle('show',index>=8);
+        document.querySelector('[data-level]').textContent=index>=images.length?'Today’s island is clear':`${images.length-index} pieces left`;
       }
       function toast(text){const el=document.querySelector('[data-toast]');el.textContent=text;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1100)}
       function reward(value){const el=document.querySelector('[data-reward-pop]');el.textContent='+'+value;el.classList.remove('show');void el.offsetWidth;el.classList.add('show')}
