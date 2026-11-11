@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>拾影 · 视觉画布</title><meta name="description" content="通过视觉线索渐进查找照片的交互实验。"><link rel="stylesheet" href="canvas.css"></head>
+<body>
+<header><a class="brand" href="#" aria-label="拾影，返回总览">拾影<span>SHIYING / 03</span></a><nav><button id="helpBtn">操作说明</button><a href="https://shiying-recall-test.purple-pin-1706.chatgpt.site/" target="_blank" rel="noopener">上一版 ↗</a><button id="themeBtn" aria-label="切换深浅背景">◐</button></nav></header>
+<main id="viewport" aria-label="可拖动和缩放的照片画布" tabindex="0">
+ <div id="world"><svg id="links" viewBox="0 0 2800 1800" aria-hidden="true"></svg><div id="photos"></div><div id="fieldLabels" aria-hidden="true"></div></div>
+ <div id="selectionRect" hidden></div>
+ <div class="canvas-title" id="canvasTitle"><span class="eyebrow">VISUAL ARCHIVE</span><h1>影像之间</h1><p><b id="totalCount">118</b> 张照片 · 视觉查找实验</p></div>
+ <div class="status-line"><i></i><span id="status" role="status">全部影像</span></div>
+ <form id="searchForm" autocomplete="off"><span aria-hidden="true">⌕</span><input id="query" aria-label="补充文字线索" placeholder="补充线索" maxlength="160"><button type="submit" aria-label="添加文字线索">↗</button></form>
+ <div class="viewtools"><button id="spaceBtn" class="active" aria-pressed="true">空间</button><span>/</span><button id="stripBtn" aria-pressed="false">序列</button><button id="focusBtn" hidden>相关影像 ↗</button></div>
+ <div id="inspector" hidden><div class="inspect-top"><span id="photoId"></span><button id="closeInspector" aria-label="关闭照片详情">×</button></div><div id="inspectFrame"><img id="inspectPhoto" alt=""><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div id="handles"></div></div><div id="photoReason"></div><div class="inspect-actions"><button id="wholeRef">＋ 整体参考</button><button id="dismissBtn">排除本张</button><button id="saveBtn">选入素材</button></div><div class="inspect-caption"><span id="photoTitle"></span><button id="showSource" aria-label="查看照片标签和来源">ⓘ</button></div></div>
+ <div id="dropGhost" hidden></div>
+ <div id="discardZone" aria-label="拖到此处排除本张">−<small>排除本张</small></div>
+ <aside id="minimap" aria-label="画布导航缩略图"><svg viewBox="0 0 2800 1800" id="miniSvg"></svg></aside>
+ <div class="zoomtools"><button id="lassoBtn" aria-label="圈选局部查看" title="圈选局部查看 · L" aria-pressed="false">⌗</button><button id="fitBtn" aria-label="总览所有照片" title="总览 · 0">⊡</button><span class="zoom-divider"></span><button id="zoomOut" aria-label="缩小">−</button><span id="zoomLevel">100%</span><button id="zoomIn" aria-label="放大">＋</button></div>
+ <div id="hint"><span>拖动画布</span><span>滚轮缩放</span><span>照片拖至下方作为参考</span><button id="hideHint" aria-label="隐藏操作提示">×</button></div>
+</main>
+<footer id="tray" aria-label="已保留的查找线索"><div class="tray-head"><span>参考<span class="slash"> / </span><b id="signalCount">0</b></span><div><button id="undoBtn" disabled aria-label="撤销上一步线索">↶ 撤销</button><button id="resetBtn">重置</button></div></div><div id="trail"><div id="emptyTrail"><span class="empty-ring">＋</span><span>照片或局部参考</span></div></div><div class="tray-tail"><button id="savedBtn">素材 <b id="savedCount">0</b> ↗</button><button id="scopeBtn" title="切换突出范围">突出 <span id="scopeCount">12</span> 张</button></div></footer>
+<div id="toast" role="status"></div>
+<dialog id="helpDialog"><button class="close" data-close aria-label="关闭操作说明">×</button><span class="eyebrow">INTERACTION NOTES</span><h2>操作说明</h2><ol><li>拖动空白区域平移，滚轮或右下角按钮缩放。</li><li>把照片拖到下方参考区，相关影像会突出，其他影像仍留在画布上。</li><li>点开照片，拖动四个控点，分别借用颜色、背景、主体或构图。也可以直接点控点添加。</li><li>参考缩略图的「＋／−」可切换接近或远离这类特征；× 移除线索。文字条件可点按调整。</li><li>「空间／序列」只改变浏览布局，不会清空已确认的线索。</li></ol><p class="disclosure">这是118张照片的交互实验。检索依据人工视觉标签，不是实时 AI；没有给目标照片额外加分。淡出不代表删除，素材选择不会改动原文件。大量照片下的准确率与性能尚未验证。</p><button id="helpStart" class="plain-cta">开始使用 ↗</button></dialog>
+<dialog id="savedDialog"><button class="close" data-close aria-label="关闭素材">×</button><span class="eyebrow">SELECTION</span><h2>已选素材 <span id="savedTotal">0</span></h2><div id="savedGrid"></div><p class="disclosure">只记录本次选片，不会删除或整理原文件。</p></dialog>
+<dialog id="sourceDialog"><button class="close" data-close aria-label="关闭影像信息">×</button><span class="eyebrow">PHOTO INFORMATION</span><h2 id="sourceTitle"></h2><div id="sourceTags"></div><a id="sourceLink" target="_blank" rel="noopener">查看来源 ↗</a></dialog>
+<script src="base-tags.js"></script><script src="base-sources.js"></script><script src="recall-data.js"></script><script src="engine.js"></script><script src="canvas.js"></script>
+</body></html>
