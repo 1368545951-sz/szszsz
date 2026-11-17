@@ -18,7 +18,7 @@
   const positions=[[300,300,-13],[530,310,18],[755,270,-10],[920,340,12],[270,520,23],[460,520,-22],[690,500,15],[900,560,-18],[240,760,-12],[480,790,24],[710,740,-18],[890,850,13]];
   const sample=id=>samples.find(p=>p.id===id);
   const level=s=>stages.reduce((n,x,i)=>s.xp>=x?i+1:n,1);
-  const fresh=()=>{const s={version:2,day:1,xp:80,earned:{1:0},completed:[],items:[],debris:[],cleaned:0,installed:[],styles:{},places:{},favourite:null,next:1,history:[],rankVisible:true,skipped:0};addPack(s);return s;};
+  const fresh=()=>{const s={version:2,day:1,xp:80,earned:{1:0},completed:[],items:[],debris:[],cleaned:0,installed:[],styles:{},places:{},favourite:null,next:1,history:[],rankVisible:true,skipped:0,roomTier:0,vacuumDiscovered:false};addPack(s);return s;};
   function addPack(s){const set=samples.filter(p=>p.day===(s.day-1)%2);set.forEach((p,i)=>{const [u,v,r]=positions[i];s.items.push({id:'photo-'+s.next++,sampleId:p.id,day:s.day,status:'floor',u:u+(s.day%3-1)*13,v,r,credits:[],at:p.time});});}
   const floor=s=>s.items.filter(p=>p.status==='floor');
   const kept=s=>s.items.filter(p=>p.status==='keep');
@@ -39,6 +39,12 @@
   function favourite(s,id){const p=item(s,id);if(p?.status!=='keep')throw Error('Keep a photo before putting it in a frame.');s.favourite=id;}
   const current=s=>({floor:floor(s).length,keep:kept(s).length,later:later(s).length,bag:bag(s).length,dust:s.debris.length,deleted:s.items.filter(p=>p.status==='deleted').length});
   const ranking=s=>[{name:'Mia',xp:320,colour:'#b5b1e5'},{name:'Jules',xp:210,colour:'#a9d3b4'},{name:'You',xp:s.xp,colour:'#ffcf56',you:true},{name:'Alex',xp:130,colour:'#f1a7aa'}].sort((a,b)=>b.xp-a.xp);
-  const api={samples,sample,decor,stages,positions,level,fresh,addPack,floor,kept,later,bag,item,earn,decide,undo,clean,finish,dust,nextDay,overflow,reviewLater,restore,install,favourite,current,ranking};
+
+  const expansions=[{name:'Cozy room',xp:0},{name:'Roomy studio',xp:160},{name:'Gallery loft',xp:300}];
+  const roomTier=s=>Math.max(0,Math.min(2,Math.floor(Number(s.roomTier)||0)));
+  const roomSize=s=>1000+roomTier(s)*220;
+  function expand(s){const next=expansions[roomTier(s)+1];if(!next)throw Error('Your room is fully expanded.');if(s.xp<next.xp)throw Error('Reach '+next.xp+' total XP to expand.');s.roomTier=roomTier(s)+1;return next;}
+  const overtaken=(before,after)=>ranking({xp:after}).filter(p=>!p.you&&before<=p.xp&&after>p.xp);
+  const api={expansions,roomTier,roomSize,expand,overtaken,samples,sample,decor,stages,positions,level,fresh,addPack,floor,kept,later,bag,item,earn,decide,undo,clean,finish,dust,nextDay,overflow,reviewLater,restore,install,favourite,current,ranking};
   if(typeof module!=='undefined')module.exports=api;root.Room=api;
 })(typeof window==='undefined'?globalThis:window);
