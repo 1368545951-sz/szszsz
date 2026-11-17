@@ -1,10 +1,10 @@
 (() => {
   let canvas,ctx,get,last=0;const cache={};
   const ink='#34312d';
-  const scale=()=>get?1000/Room.roomSize(get()):1;
+  const scale=()=>[0.72,0.64,0.56][get?Room.roomTier(get()):0];
   const q=(u,v,z=0)=>({x:600+(u-v)*.5*scale(),y:350+((u+v)*.26-z)*scale()});
   const baseAnchors={sofa:[[655,50],[70,590],[230,35]],projector:[[410,140],[110,530],[810,320]],printer:[[370,110],[70,430],[830,370]],lamp:[[920,100],[100,850],[100,100]],shelf:[[0,280],[0,450],[0,710]]};
-  function roomAnchors(){const tier=get?Room.roomTier(get()):0;const out=Object.fromEntries(Object.entries(baseAnchors).map(([k,v])=>[k,v.map(a=>[...a])]));if(tier>=1){for(const k of ['projector','printer','lamp'])out[k].push([1030,90],[90,1030]);out.sofa.push([850,950],[80,990]);out.shelf.push([0,1020]);}if(tier>=2){for(const k of ['projector','printer','lamp'])out[k].push([1220,160],[160,1220]);out.sofa.push([1110,1080],[450,1210]);out.shelf.push([0,1260]);}return out;}
+  function roomAnchors(){const tier=get?Room.roomTier(get()):0;const out=Object.fromEntries(Object.entries(baseAnchors).map(([k,v])=>[k,v.map(a=>[...a])]));if(tier>=1){for(const k of ['projector','printer','lamp'])out[k].push([1030,90],[90,1030]);out.sofa.push([1070,1050],[80,1190]);out.shelf.push([0,1200]);}if(tier>=2){for(const k of ['projector','printer','lamp'])out[k].push([1630,160],[160,1630]);out.sofa.push([1540,1400],[450,1650]);out.shelf.push([0,1660]);}return out;}
   function poly(ps,fill,stroke=ink,width=3){ctx.beginPath();ps.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.lineJoin='round';ctx.stroke();}}
   const plane=(u,v,w,d,z,c,stroke=ink,width=3)=>poly([q(u,v,z),q(u+w,v,z),q(u+w,v+d,z),q(u,v+d,z)],c,stroke,width);
   function box(u,v,w,d,h,top,left,right,z=0){poly([q(u,v+d,z),q(u+w,v+d,z),q(u+w,v+d,z+h),q(u,v+d,z+h)],left);poly([q(u+w,v,z),q(u+w,v+d,z),q(u+w,v+d,z+h),q(u+w,v,z+h)],right);plane(u,v,w,d,z+h,top);}
@@ -18,11 +18,11 @@
   function projector(u,v,s){box(u,v,125,90,53,'#ffe2a1','#e7ad69','#bf875a');box(u+16,v+15,80,55,44,'#a5c8c1','#769f9b','#4f8587',53);const p=q(u+32,v+13,120);ctx.fillStyle='#364746';ctx.fillRect(p.x-10,p.y-12,29,25);ctx.fillRect(p.x+27,p.y-12,29,25);ctx.fillStyle='#8cae9d';ctx.fillRect(p.x-3,p.y-6,15,13);ctx.fillRect(p.x+34,p.y-6,15,13);box(u+89,v+24,18,30,25,'#ffdc76','#dfbb52','#b89a47',60);if(Room.kept(s).length){const a=q(u+110,v+35,80);poly([a,{x:a.x+70,y:a.y-55},{x:a.x+75,y:a.y-3}],'#fff5ad77',null);}}
   function lamp(u,v){plane(u-18,v-18,55,55,4,'#eec85a');box(u,v,7,7,146,'#f8df80','#ceab53','#a58444',4);const p=q(u+3,v+3,177);poly([{x:p.x-30,y:p.y+25},{x:p.x-18,y:p.y-12},{x:p.x+20,y:p.y-12},{x:p.x+33,y:p.y+25}],'#fff3c0');path([{x:p.x-9,y:p.y-10},{x:p.x-16,y:p.y+22}],'#e6c56a',2);path([{x:p.x+8,y:p.y-10},{x:p.x+16,y:p.y+22}],'#e6c56a',2);}
   function draw(now){requestAnimationFrame(draw);if(now-last<100)return;last=now;const s=get(),theme=s.styles.wallpaper,wallA=theme==='sunset-wall'?'#ffcb9d':theme==='stripe-wall'?'#ffe1eb':'#fff1c0',wallB=theme==='stripe-wall'?'#c3e5ed':'#fff9dd';ctx.clearRect(0,0,1200,940);ctx.lineJoin='round';
-    const size=Room.roomSize(s),wallHeight=280/scale();
+    const size=Room.roomSize(s),wallHeight=220/scale();
     // Crisp isometric room: no separate photo-work area.
-    poly([{x:600,y:374},{x:1121,y:633},{x:600,y:907},{x:79,y:633}],'#c6924126',null);
+    poly([q(0,0,-26),q(size,0,-26),q(size,size,-26),q(0,size,-26)],'#c6924126',null);
     poly([q(0,0,-16),q(size,0,-16),q(size,size,-16),q(0,size,-16)],'#f3d188');poly([q(0,size,-16),q(size,size,-16),q(size,size,0),q(0,size,0)],'#d69551');poly([q(size,0,-16),q(size,size,-16),q(size,size,0),q(size,0,0)],'#bd8047');
-    plane(0,0,size,size,0,theme==='sunset-wall'?'#efa054':'#e9b16d');
+    plane(0,0,size,size,0,theme==='sunset-wall'?'#efa054':'#e9b16d');if(Room.roomTier(s)>0){plane(1000,0,size-1000,size,0,'#f0c58a',null);plane(0,1000,1000,size-1000,0,'#f0c58a',null);}if(Room.roomTier(s)>1){plane(1450,0,size-1450,size,0,'#f4d29c',null);plane(0,1450,1450,size-1450,0,'#f4d29c',null);}
     for(let v=0;v<size;v+=72){path([q(0,v),q(size,v)],'#b77943',1.4);for(let u=(v/72%2)*110;u<size;u+=230){path([q(u,v),q(u,Math.min(size,v+72))],'#c48b51',1.4);path([q(u+30,v+20),q(Math.min(u+130,size),v+20)],'#eec58d',1);}}
     poly([q(0,0),q(0,size),q(0,size,wallHeight),q(0,0,wallHeight)],wallA);poly([q(0,0),q(size,0),q(size,0,wallHeight),q(0,0,wallHeight)],wallB);
     // Wallpaper stripes stay in the wall plane.

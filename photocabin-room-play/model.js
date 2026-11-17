@@ -40,11 +40,13 @@
   const current=s=>({floor:floor(s).length,keep:kept(s).length,later:later(s).length,bag:bag(s).length,dust:s.debris.length,deleted:s.items.filter(p=>p.status==='deleted').length});
   const ranking=s=>[{name:'Mia',xp:320,colour:'#b5b1e5'},{name:'Jules',xp:210,colour:'#a9d3b4'},{name:'You',xp:s.xp,colour:'#ffcf56',you:true},{name:'Alex',xp:130,colour:'#f1a7aa'}].sort((a,b)=>b.xp-a.xp);
 
-  const expansions=[{name:'Cozy room',xp:0},{name:'Roomy studio',xp:160},{name:'Gallery loft',xp:300}];
+  const expansions=[{name:'Cozy room',xp:0},{name:'Roomy studio',xp:100},{name:'Gallery loft',xp:160}];
   const roomTier=s=>Math.max(0,Math.min(2,Math.floor(Number(s.roomTier)||0)));
-  const roomSize=s=>1000+roomTier(s)*220;
+  const roomSize=s=>1000+roomTier(s)*450;
   function expand(s){const next=expansions[roomTier(s)+1];if(!next)throw Error('Your room is fully expanded.');if(s.xp<next.xp)throw Error('Reach '+next.xp+' total XP to expand.');s.roomTier=roomTier(s)+1;return next;}
   const overtaken=(before,after)=>ranking({xp:after}).filter(p=>!p.you&&before<=p.xp&&after>p.xp);
-  const api={expansions,roomTier,roomSize,expand,overtaken,samples,sample,decor,stages,positions,level,fresh,addPack,floor,kept,later,bag,item,earn,decide,undo,clean,finish,dust,nextDay,overflow,reviewLater,restore,install,favourite,current,ranking};
+  const expansionOffer=s=>{const tier=roomTier(s)+1,next=expansions[tier];return next&&s.xp>=next.xp&&!(s.expansionOffers||[]).includes(tier)?tier:null;};
+  function noteExpansionOffer(s){const tier=expansionOffer(s);if(tier!==null)s.expansionOffers=[...(s.expansionOffers||[]),tier];return tier;}
+  const api={expansionOffer,noteExpansionOffer,expansions,roomTier,roomSize,expand,overtaken,samples,sample,decor,stages,positions,level,fresh,addPack,floor,kept,later,bag,item,earn,decide,undo,clean,finish,dust,nextDay,overflow,reviewLater,restore,install,favourite,current,ranking};
   if(typeof module!=='undefined')module.exports=api;root.Room=api;
 })(typeof window==='undefined'?globalThis:window);
