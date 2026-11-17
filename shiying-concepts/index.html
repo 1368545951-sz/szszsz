@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f6f3e9">
+  <meta name="description" content="Explore three interactive concepts for saving, reviewing and rediscovering your photos.">
+  <title>Shiying · Three photo experiences</title>
+  <link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+  <main id="home-view">
+    <header class="home-header"><a href="#" class="brand" aria-label="Shiying home"><span class="brand-mark">✳</span> SHIYING<span class="brand-sub">A DIFFERENT RELATIONSHIP WITH YOUR PHOTOS</span></a><span class="header-note">THREE INTERACTIVE CONCEPTS / 01—03</span></header>
+    <section class="intro" aria-labelledby="home-title"><span class="eyebrow">SAVE · REVIEW · REDISCOVER</span><h1 id="home-title" tabindex="-1">Your photos,<br><em>three possibilities.</em></h1><p>Keep the meaning. Make time to review.<br>Find the moments you want to return to.</p><span class="start-note">CHOOSE A CONCEPT BELOW <span aria-hidden="true">↙</span></span></section>
+    <section class="concepts" aria-label="Choose a concept">
+      <article class="concept diary">
+        <div class="card-top"><span>01 / SAVING & REMEMBERING</span><span aria-hidden="true">✳</span></div>
+        <div class="concept-art diary-art" aria-hidden="true"><div class="mini-book"><span class="book-date">TODAY / A LITTLE STORY</span><div class="polaroid p-one"><img src="../shiying-diary-pop/assets/coffee.jpg" alt=""><span>one quiet moment</span></div><div class="polaroid p-two"><img src="../shiying-diary-pop/assets/street.jpg" alt=""><span>colours to remember</span></div><span class="book-star">✦</span><span class="book-lines"></span></div></div>
+        <a class="concept-button" href="#concept-1">Concept 1 <span aria-hidden="true">↗</span></a>
+        <h2>Photo Diary</h2><p class="concept-description">Save a photo with a few words, or give a temporary image a time to review.</p>
+      </article>
+      <article class="concept cabin">
+        <div class="card-top"><span>02 / REVIEWING & DELETING</span><span aria-hidden="true">▣</span></div>
+        <div class="concept-art room-art" aria-hidden="true"><svg viewBox="0 0 360 240"><path d="M180 32 320 104 180 183 40 104Z" fill="#f8e4aa" stroke="#46544b" stroke-width="2"/><path d="M40 104v52l140 77v-50ZM320 104v52l-140 77v-50Z" fill="#e8b983" stroke="#46544b" stroke-width="2"/><path d="M40 104V18L180 91v92Z" fill="#fff6dc" stroke="#46544b" stroke-width="2"/><path d="M180 91 320 18v86l-140 79Z" fill="#f5d8ae" stroke="#46544b" stroke-width="2"/><path d="m75 51 49 25v39L75 90Z" fill="#df91a5" stroke="#46544b" stroke-width="2"/><path d="m83 65 33 17v19L83 84Z" fill="#b2d5c1"/><path d="m229 80 50-27v41l-50 27Z" fill="#a4ced5" stroke="#46544b" stroke-width="2"/><path d="m100 140 70-34 93 47-73 43Z" fill="#c5d6b5" stroke="#46544b" stroke-width="2"/><path d="m131 137 25-13 20 11-25 14Z" fill="#fffef8" stroke="#a09170"/><path d="m192 158 24-13 20 11-24 14Z" fill="#fffef8" stroke="#a09170"/><path d="m141 132 11-5 12 6-12 7Z" fill="#eea6b8"/><path d="m204 155 9-5 12 6-9 5Z" fill="#8badb6"/><g transform="translate(278 144)"><rect x="0" y="0" width="29" height="42" rx="7" fill="#67afa5" stroke="#46544b" stroke-width="2"/><path d="M2 9H-14V29H-29" fill="none" stroke="#46544b" stroke-width="5"/><path d="M-38 28h20v7h-20" fill="#ec9c9c" stroke="#46544b" stroke-width="2"/><circle cx="6" cy="44" r="4" fill="#46544b"/><circle cx="24" cy="44" r="4" fill="#46544b"/></g></svg></div>
+        <a class="concept-button" href="#concept-2">Concept 2 <span aria-hidden="true">↗</span></a>
+        <h2>Photo Cabin</h2><p class="concept-description">Review your daily photos in a little room. Display favourites, tidy up and grow your space.</p>
+      </article>
+      <article class="concept canvas">
+        <div class="card-top"><span>03 / FINDING & REUSING</span><span aria-hidden="true">⌕</span></div>
+        <div class="concept-art canvas-art" aria-hidden="true"><svg class="connection-lines" viewBox="0 0 360 240"><path d="m45 60 117 71L280 49M162 131l116 64M162 131l-89 66" stroke="#6c988c" fill="none" stroke-dasharray="4 5"/></svg><img class="tile t1" src="../shiying-visual-canvas/assets/p0.jpg" alt=""><img class="tile t2" src="../shiying-visual-canvas/assets/p3.jpg" alt=""><img class="tile t3" src="../shiying-visual-canvas/assets/p4.jpg" alt=""><img class="tile t4" src="../shiying-visual-canvas/assets/p21.jpg" alt=""><span class="visual-clue">COLOUR + SUBJECT</span><span class="canvas-target">↗</span></div>
+        <a class="concept-button" href="#concept-3">Concept 3 <span aria-hidden="true">↗</span></a>
+        <h2>Visual Canvas</h2><p class="concept-description">Start with a visual memory. Use colour, subject, background or composition to find a photo.</p>
+      </article>
+    </section>
+    <footer class="home-footer"><span>SHIYING / DIGITAL PHOTO HOARDING & DESIGN INTERVENTION</span><span>Interactive prototypes · Sample photos</span></footer>
+  </main>
+  <section id="experience-view" hidden aria-label="Interactive concept">
+    <header class="experience-bar"><a class="home-button" href="#">← All concepts</a><span class="experience-name" id="experience-name"></span><span id="load-status" role="status"></span><button id="reset-concept" type="button">↻ Reset this concept</button></header>
+    <p id="experience-message" class="experience-message" role="status" hidden></p>
+    <iframe id="concept-frame" title="Concept experience" allow="web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <noscript><p>Please enable JavaScript to switch between the three prototypes.</p></noscript>
+  </section>
+  <script src="hub.js?v=1"></script><script src="app.js?v=1"></script>
+</body></html>
