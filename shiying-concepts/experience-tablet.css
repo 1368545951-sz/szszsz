@@ -1,0 +1,52 @@
+/* Loaded only inside the exhibition hub. Prototype behavior and stored data stay unchanged. */
+@media(min-width:1000px) and (max-width:1400px) and (orientation:landscape) and (max-height:850px){
+ html[data-exhibition-concept]{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+ /* Photo Diary: preserve the book and allow natural scrolling through longer diary pages. */
+ html[data-exhibition-concept=diary] body{overflow-x:hidden}
+ html[data-exhibition-concept=diary] .topbar{height:70px;padding:0 28px;gap:18px}
+ html[data-exhibition-concept=diary] .topbar button{min-height:44px}
+ html[data-exhibition-concept=diary] .stage{min-height:0;padding:18px 30px 24px;margin:0 16px}
+ html[data-exhibition-concept=diary] .stage-top{margin-bottom:14px}
+ html[data-exhibition-concept=diary] .book{min-height:440px}
+ html[data-exhibition-concept=diary] .page{padding:22px 28px}
+ html[data-exhibition-concept=diary] .hero-title{font-size:46px;margin:16px 0 12px}
+ html[data-exhibition-concept=diary] .collage-cover{height:205px}
+ html[data-exhibition-concept=diary] .viewfinder{height:190px}
+ html[data-exhibition-concept=diary] .save-gallery{height:230px}
+ html[data-exhibition-concept=diary] .bottom-strip{margin-top:18px}
+ html[data-exhibition-concept=diary] .clock-bar{margin-top:15px;padding-top:12px}
+ html[data-exhibition-concept=diary] .diary-book{height:580px}
+ html[data-exhibition-concept=diary] .journal-image img{height:140px}
+ html[data-exhibition-concept=diary] .journal-controls button{min-height:44px}
+ html[data-exhibition-concept=diary] .site-footer{padding:16px 28px}
+ html[data-exhibition-concept=diary] dialog{max-height:calc(100dvh - 32px);overflow:auto}
+ /* Photo Cabin: size the scene against the iframe, keeping its real drop zones aligned. */
+ html[data-exhibition-concept=cabin] header{min-height:54px;padding:5px 20px}
+ html[data-exhibition-concept=cabin] .hud{padding:6px 12px}
+ html[data-exhibition-concept=cabin] .room-stage{width:min(1040px,100%,calc((100dvh - 215px)*1.2766));margin-top:0;margin-bottom:8px}
+ html[data-exhibition-concept=cabin] .room-growth-bar{margin-top:5px}
+ html[data-exhibition-concept=cabin] .bottom-bar{padding:6px 10px}
+ html[data-exhibition-concept=cabin] .demo-controls{margin:8px auto;padding-top:7px}
+ html[data-exhibition-concept=cabin] footer{padding:7px 22px 10px}
+ html[data-exhibition-concept=cabin] .room-stage .frame-guide{left:-20%;width:32%;top:25%}
+ html[data-exhibition-concept=cabin] .room-stage .vacuum-cue{right:-20%;width:32%;top:40%}
+ html[data-exhibition-concept=cabin] .room-stage .scene-guide span,html[data-exhibition-concept=cabin] .room-stage .scene-guide b{font-size:12px}
+ /* Visual Canvas: fit the enlarged controls above the reference tray in a shorter iframe. */
+ html[data-exhibition-concept=canvas] header{height:62px;padding:0 26px}
+ html[data-exhibition-concept=canvas] #startGuide{top:65px;left:26px;max-width:calc(100% - 390px);padding:8px 12px}
+ html[data-exhibition-concept=canvas] #startGuide p{font-size:14px;line-height:1.35;margin:4px 0}
+ html[data-exhibition-concept=canvas] #referenceFeedback{font-size:11px;line-height:1.3}
+ html[data-exhibition-concept=canvas] #searchForm{top:68px;right:26px;width:310px;padding:6px 10px}
+ html[data-exhibition-concept=canvas] .status-line{top:161px;left:26px;font-size:10px;max-width:calc(100% - 400px)}
+ html[data-exhibition-concept=canvas] .canvas-title{top:185px;left:26px}
+ html[data-exhibition-concept=canvas] #inspector{top:166px;right:62px;width:330px;padding:4px 32px 8px}
+ html[data-exhibition-concept=canvas] .inspect-top{margin-bottom:24px}
+ html[data-exhibition-concept=canvas] #inspectPhoto{height:clamp(82px,calc(100dvh - 532px),190px)}
+ html[data-exhibition-concept=canvas] #photoReason{font-size:11px;line-height:1.35;margin:29px -9px 3px}
+ html[data-exhibition-concept=canvas] .inspect-actions{gap:5px}
+ html[data-exhibition-concept=canvas] .inspect-actions button{font-size:11px;min-height:40px}
+ html[data-exhibition-concept=canvas] .inspect-caption{margin-top:4px;font-size:9px}
+ html[data-exhibition-concept=canvas] #inspector .handle{font-size:14px;min-height:44px;padding:8px 10px}
+ html[data-exhibition-concept=canvas] #hint{font-size:9px}
+ html[data-exhibition-concept=canvas] #hint span:last-of-type{display:none}
+}

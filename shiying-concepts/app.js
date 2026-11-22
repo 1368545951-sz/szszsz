@@ -6,7 +6,14 @@
   const activityEvents=['pointerdown','pointermove','pointerup','keydown','wheel','scroll','touchstart','touchmove','input','click'];
   let childDocument=null;
   function unbindFrameActivity(){if(childDocument){for(const event of activityEvents)childDocument.removeEventListener(event,idle.touch,true);childDocument=null;}}
-  function bindFrameActivity(){unbindFrameActivity();if(!active)return;try{if(frame.contentWindow.location.href==='about:blank')return;childDocument=frame.contentDocument;if(childDocument)for(const event of activityEvents)childDocument.addEventListener(event,idle.touch,{capture:true,passive:true});}catch{/* Other-origin links cannot affect the host's controls. */}}
+  function bindFrameActivity(){unbindFrameActivity();if(!active)return;try{if(frame.contentWindow.location.href==='about:blank')return;childDocument=frame.contentDocument;if(childDocument){applyExhibitionLayout(childDocument);for(const event of activityEvents)childDocument.addEventListener(event,idle.touch,{capture:true,passive:true});}}catch{/* Other-origin links cannot affect the host's controls. */}}
+  function applyExhibitionLayout(doc){
+    doc.documentElement.dataset.exhibitionConcept=active.view;
+    if(doc.getElementById('exhibition-tablet-layout'))return;
+    const link=doc.createElement('link');link.id='exhibition-tablet-layout';link.rel='stylesheet';
+    link.href=new URL('experience-tablet.css?v=20261123-air4',document.baseURI).href;
+    doc.head.appendChild(link);
+  }
   for(const event of activityEvents)document.addEventListener(event,idle.touch,{capture:true,passive:true});
   frame.addEventListener('load',bindFrameActivity);
   document.addEventListener('visibilitychange',idle.check);
