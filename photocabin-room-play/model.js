@@ -18,7 +18,7 @@
   const positions=[[300,300,-13],[530,310,18],[755,270,-10],[920,340,12],[270,520,23],[460,520,-22],[690,500,15],[900,560,-18],[240,760,-12],[480,790,24],[710,740,-18],[890,850,13]];
   const sample=id=>samples.find(p=>p.id===id);
   const level=s=>stages.reduce((n,x,i)=>s.xp>=x?i+1:n,1);
-  const fresh=()=>{const s={version:2,day:1,xp:80,earned:{1:0},completed:[],items:[],debris:[],cleaned:0,installed:[],styles:{},places:{},favourite:null,next:1,history:[],rankVisible:true,skipped:0,roomTier:0,vacuumDiscovered:false,hintsDismissed:{}};addPack(s);return s;};
+  const fresh=()=>{const s={version:2,day:1,xp:80,earned:{1:0},completed:[],items:[],debris:[],cleaned:0,installed:[],styles:{},places:{},favourite:null,displayed:[],next:1,history:[],rankVisible:true,skipped:0,roomTier:0,vacuumDiscovered:false,hintsDismissed:{}};addPack(s);return s;};
   function floorPosition(s,index){if(!roomTier(s)){const [u,v,r]=positions[index%positions.length];return{u:u+(s.day%3-1)*13,v,r};}const size=roomSize(s),slot=(index*5+s.day*3)%12;const u=[.23,.44,.65,.86][slot%4]*size,v=[.29,.55,.82][Math.floor(slot/4)]*size;const jitter=((index+s.day)%3-1)*size*.018;return{u:u+jitter,v:v-jitter,r:positions[index%positions.length][2]};}
   function dismissHint(s,id){if(!['frame','vacuum'].includes(id))return;s.hintsDismissed={...(s.hintsDismissed||{}),[id]:true};}
   function addPack(s){const set=samples.filter(p=>p.day===(s.day-1)%2);set.forEach((p,i)=>{const pos=floorPosition(s,i);s.items.push({id:'photo-'+s.next++,sampleId:p.id,day:s.day,status:'floor',...pos,credits:[],at:p.time});});}
@@ -28,8 +28,8 @@
   const bag=s=>s.items.filter(p=>p.status==='bag');
   const item=(s,id)=>s.items.find(p=>p.id===id);
   function earn(s,n){const before=s.earned[s.day]||0,after=Math.min(100,before+n);s.earned[s.day]=after;s.xp+=after-before;return after-before;}
-  function decide(s,id,status){const p=item(s,id);if(!p||!['keep','later','bag'].includes(status))throw Error('Choose a photo and a destination.');if(p.status==='deleted')throw Error('Restore this photo first.');if(p.status===status)return 0;s.history.push({type:'photo',id,before:p.status});p.status=status;let gain=0;if(!p.credits.includes(s.day)){p.credits.push(s.day);gain=earn(s,5);}return gain;}
-  function undo(s){const a=s.history.pop();if(!a)return null;if(a.type==='photo'){const p=item(s,a.id);if(p)p.status=a.before;}else if(a.type==='dust'){s.debris.push(a.piece);s.cleaned=Math.max(0,s.cleaned-1);}return a;}
+  function decide(s,id,status){const p=item(s,id);if(!p||!['keep','later','bag'].includes(status))throw Error('Choose a photo and a destination.');if(p.status==='deleted')throw Error('Restore this photo first.');if(p.status===status)return 0;const shown=displayed(s).map(p=>p.id);s.history.push({type:'photo',id,before:p.status,displayedBefore:shown,favouriteBefore:s.favourite});s.displayed=shown;p.status=status;if(status!=='keep')s.displayed=s.displayed.filter(x=>x!==id);let gain=0;if(!p.credits.includes(s.day)){p.credits.push(s.day);gain=earn(s,5);}return gain;}
+  function undo(s){const a=s.history.pop();if(!a)return null;if(a.type==='photo'){const p=item(s,a.id);if(p)p.status=a.before;if(Array.isArray(a.displayedBefore)){const others=displayed(s).filter(p=>p.id!==a.id).map(p=>p.id),wasShown=a.displayedBefore.includes(a.id);s.displayed=wasShown?[...others,a.id]:others;if(!s.displayed.includes(s.favourite))s.favourite=s.displayed.includes(a.favouriteBefore)?a.favouriteBefore:s.displayed[s.displayed.length-1]||null;}}else if(a.type==='dust'){s.debris.push(a.piece);s.cleaned=Math.max(0,s.cleaned-1);}return a;}
   function clean(s,id){const i=s.debris.findIndex(d=>d.id===id);if(i<0)return false;const [piece]=s.debris.splice(i,1);s.history.push({type:'dust',piece});s.cleaned++;return true;}
   function finish(s){if(floor(s).length||s.debris.length)throw Error('Put away the remaining photos and clean the loose paper first.');bag(s).forEach(p=>p.status='deleted');let gain=0;if(!s.completed.includes(s.day)){s.completed.push(s.day);gain=earn(s,40);}s.history=[];return gain;}
   function dust(s,n,reason){const existing=s.debris.length;for(let i=0;i<Math.min(n,12-existing);i++){const k=existing+i;s.debris.push({id:'dust-'+s.day+'-'+s.next++,u:170+(k*193)%720,v:270+(k*137)%650,r:(k*47)%90-45,kind:k%3,reason});}}
@@ -38,7 +38,9 @@
   function reviewLater(s,id){const p=item(s,id);if(!p||p.status!=='later')return;p.status='floor';p.u=330+(s.next++*97)%500;p.v=570+(s.next*39)%260;}
   function restore(s,id){const p=item(s,id);if(p&&['bag','deleted'].includes(p.status)){p.status='floor';p.u=450;p.v=600;return true;}return false;}
   function install(s,id,spot=0){const d=decor.find(d=>d.id===id);if(!d||level(s)<d.level)throw Error('This decoration is still locked.');if(!s.installed.includes(id))s.installed.push(id);s.styles[d.group]=id;s.places[d.group]=spot;}
-  function favourite(s,id){const p=item(s,id);if(p?.status!=='keep')throw Error('Keep a photo before putting it in a frame.');s.favourite=id;}
+  const displayed=s=>{const ids=Array.isArray(s.displayed)?s.displayed:(s.favourite?[s.favourite]:[]);return ids.map(id=>item(s,id)).filter(p=>p?.status==='keep');};
+  function favourite(s,id){const p=item(s,id);if(p?.status!=='keep')throw Error('Keep a photo before putting it in a frame.');s.displayed=[...new Set([...displayed(s).map(p=>p.id),id])];s.favourite=id;}
+
   const current=s=>({floor:floor(s).length,keep:kept(s).length,later:later(s).length,bag:bag(s).length,dust:s.debris.length,deleted:s.items.filter(p=>p.status==='deleted').length});
   const ranking=s=>[{name:'Mia',xp:320,colour:'#b5b1e5'},{name:'Jules',xp:210,colour:'#a9d3b4'},{name:'You',xp:s.xp,colour:'#ffcf56',you:true},{name:'Alex',xp:130,colour:'#f1a7aa'}].sort((a,b)=>b.xp-a.xp);
 
@@ -49,6 +51,6 @@
   const overtaken=(before,after)=>ranking({xp:after}).filter(p=>!p.you&&before<=p.xp&&after>p.xp);
   const expansionOffer=s=>{const tier=roomTier(s)+1,next=expansions[tier];return next&&s.xp>=next.xp&&!(s.expansionOffers||[]).includes(tier)?tier:null;};
   function noteExpansionOffer(s){const tier=expansionOffer(s);if(tier!==null)s.expansionOffers=[...(s.expansionOffers||[]),tier];return tier;}
-  const api={floorPosition,dismissHint,expansionOffer,noteExpansionOffer,expansions,roomTier,roomSize,expand,overtaken,samples,sample,decor,stages,positions,level,fresh,addPack,floor,kept,later,bag,item,earn,decide,undo,clean,finish,dust,nextDay,overflow,reviewLater,restore,install,favourite,current,ranking};
+  const api={displayed,floorPosition,dismissHint,expansionOffer,noteExpansionOffer,expansions,roomTier,roomSize,expand,overtaken,samples,sample,decor,stages,positions,level,fresh,addPack,floor,kept,later,bag,item,earn,decide,undo,clean,finish,dust,nextDay,overflow,reviewLater,restore,install,favourite,current,ranking};
   if(typeof module!=='undefined')module.exports=api;root.Room=api;
 })(typeof window==='undefined'?globalThis:window);
