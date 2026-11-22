@@ -22,7 +22,7 @@
 .room-stage .album-label,.room-stage .drawer-label{min-width:132px;min-height:48px;padding:8px 10px;border:3px solid;border-radius:8px;box-shadow:3px 4px 0 #514d3530;transform:translate(-50%,-50%);text-align:center}
 .room-stage .album-label{background:#d0f0d7;border-color:#23775a}.room-stage .drawer-label{background:#e4d8f7;border-color:#7250aa}
 .room-stage .room-label b{font-size:14px;letter-spacing:.3px}.room-stage .album-label>span,.room-stage .drawer-label>span{display:block;font-size:12px;color:#34443c;line-height:1.4}
-.room-stage .frame-label{width:12%;height:13%;border:3px solid #b94170;border-radius:6px;background:#f8b6d016;outline:0}
+.room-stage .frame-label{width:12%;height:13%;border:3px solid transparent;border-radius:6px;background:transparent;outline:0}
 .room-stage .frame-label b{bottom:-16px;background:#f7d4e3;color:#722b47;border:2px solid #b94170;border-radius:5px;padding:4px 8px;white-space:nowrap;font-size:13px}
 .room-stage .frame-label .frame-sr{display:block!important;position:absolute;top:calc(100% + 17px);left:50%;transform:translateX(-50%);width:128px;height:auto;clip-path:none;overflow:visible;font-size:11px;line-height:1.4;text-align:center;background:#fff7dccc;color:#6b314a;border-radius:3px;padding:2px}
 .room-stage .room-label.drop-over{outline:4px solid #fff7df;filter:drop-shadow(0 0 8px #fff6cc);background:#fff7bf}
@@ -31,7 +31,7 @@
 .room-stage{margin-bottom:14px}.room-stage .frame-guide{top:20%;left:0;width:22%;padding:10px 28px 10px 10px}
 .room-stage .vacuum-cue{top:86%;right:0;width:25%;padding:10px 28px 10px 10px}
 .room-stage .scene-guide b{font-size:12px}.room-stage .scene-guide span{font-size:12px;line-height:1.45}.guide-close{width:28px;height:28px;font-size:24px}
-#vacuum-tool{left:87%;top:68%;height:16%;outline:3px solid #bc5c44;outline-offset:6px;border-radius:8px;background:#fff0ad44}
+#vacuum-tool{left:87%;top:68%;height:16%;outline:none;outline-offset:6px;border-radius:8px;background:#fff0ad44}
 #vacuum-tool>span{font-size:11px;border:2px solid #bc5c44;background:#ffe0cb;padding:5px;transform:none;letter-spacing:0}#vacuum-tool small{font-size:10px}
 .floor-photo{width:10.5%}.floor-photo.inspecting{width:min(42%,390px)}.floor-photo.dragging{width:16%}
 .bottom-bar{position:sticky;bottom:0;z-index:190;background:#fff4baed;backdrop-filter:blur(8px);border:2px solid #a3914e;border-radius:10px;padding:10px 12px;gap:12px;box-shadow:0 -3px 12px #89722422}
